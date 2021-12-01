@@ -50,7 +50,7 @@ runs:
         [System.Security.SecureString] $securePassword = if(!!"${{ inputs.db-password }}") { ConvertTo-SecureString "${{ inputs.db-password }}" -AsPlainText -Force } else { $null }
 
         ${{ github.action_path }}/src/run-tsqlt.ps1 `
-          -dbServer "${{ inputs.db-server }}" `
+          -dbServer "${{ inputs.db-server-name }}" `
           -dbServerPort "${{ inputs.db-server-port }}" `
           -dbName "${{ inputs.db-name }}" `
           -queryTimeout "${{ inputs.query-timeout }}" `
