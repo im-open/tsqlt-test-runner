@@ -1,80 +1,105 @@
-# composite-run-steps-action-template
+# tsqlt-test-runner
 
-This template can be used to quickly start a new custom composite-run-steps action repository.  Click the `Use this template` button at the top to get started.
+An Action for running [tSqlt](https://tsqlt.org/) tests against a database. It will generate an xml file with the results of the test run.
 
 ## Index
 
-- [Inputs](#inputs)
-- [Outputs](#outputs)
-- [Example](#example)
-- [Contributing](#contributing)
-  - [Incrementing the Version](#incrementing-the-version)
-- [Code of Conduct](#code-of-conduct)
-- [License](#license)
+- [tsqlt-test-runner](#tsqlt-test-runner)
+  - [Index](#index)
+  - [TODOs](#todos)
+  - [Inputs](#inputs)
+  - [Outputs](#outputs)
+  - [Example](#example)
+  - [Contributing](#contributing)
+    - [Incrementing the Version](#incrementing-the-version)
+  - [Code of Conduct](#code-of-conduct)
+  - [License](#license)
   
 ## TODOs
 - Readme
   - [ ] Update the Inputs section with the correct action inputs
   - [ ] Update the Outputs section with the correct action outputs
   - [ ] Update the Example section with the correct usage   
-- action.yml
-  - [ ] Fill in the correct name, description, inputs and outputs and implement steps
-- CODEOWNERS
-  - [ ] Update as appropriate
-- Repository Settings
-  - [ ] On the *Options* tab check the box to *Automatically delete head branches*
-  - [ ] On the *Options* tab update the repository's visibility
-  - [ ] On the *Branches* tab add a branch protection rule
-    - [ ] Check *Require pull request reviews before merging*
-    - [ ] Check *Dismiss stale pull request approvals when new commits are pushed*
-    - [ ] Check *Require review from Code Owners*
-    - [ ] Check *Include Administrators*
-  - [ ] On the *Manage Access* tab add the appropriate groups
-- About Section (accessed on the main page of the repo, click the gear icon to edit)
-  - [ ] The repo should have a short description of what it is for
-  - [ ] Add one of the following topic tags:
-    | Topic Tag       | Usage                                    |
-    | --------------- | ---------------------------------------- |
-    | az              | For actions related to Azure             |
-    | code            | For actions related to building code     |
-    | certs           | For actions related to certificates      |
-    | db              | For actions related to databases         |
-    | git             | For actions related to Git               |
-    | iis             | For actions related to IIS               |
-    | microsoft-teams | For actions related to Microsoft Teams   |
-    | svc             | For actions related to Windows Services  |
-    | jira            | For actions related to Jira              |
-    | meta            | For actions related to running workflows |
-    | pagerduty       | For actions related to PagerDuty         |
-    | test            | For actions related to testing           |
-    | tf              | For actions related to Terraform         |
-  - [ ] Add any additional topics for an action if they apply    
+   
     
 
 ## Inputs
-| Parameter | Is Required | Description           |
-| --------- | ----------- | --------------------- |
-| `input`   | true        | Description goes here |
+| Parameter                 | Is Required | Default | Description                                                                                                                                                                                              |
+| ------------------------- | ----------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `db-server-name`          | true        | N/A     | The database server name.                                                                                                                                                                                |
+| `db-server-port`          | false       | 1433    | The port the database server listens on.                                                                                                                                                                 |
+| `db-name`                 | true        | N/A     | The name of the database to run tests against.                                                                                                                                                           |
+| `query-timeout`           | false       | N/A     | An optional setting, in seconds, for when to timeout the query that runs the tests. If tests sometimes hang, or they shouldn't take longer than a certain amount of time, this parameter can be helpful. |
+| `use-integrated-security` | true        | false   | A switch defining whether or not to use integrated security. If not provided, a password should be.                                                                                                      |
+| `db-username`             | false       | N/A     | The username to use to login to the database.                                                                                                                                                            |
+| `input`                   | false       | N/A     | The password for the user logging in to the database.                                                                                                                                                    |
 
 ## Outputs
-| Output   | Description           |
-| -------- | --------------------- |
-| `output` | Description goes here |
+| Output                          | Description                            |
+| ------------------------------- | -------------------------------------- |
+| `test-results-file-path`        | The path to the test results xml file. |
+| `total-number-of-tests`         | The total number of tests run.         |
+| `total-number-of-test-failures` | The total number of tests that failed. |
+| `total-number-of-test-errors`   | The total number of test errors.       |
 
 ## Example
 
 ```yml
-# TODO: Fill in the correct usage
 jobs:
-  job1:
+  build-and-test-database:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
 
-      - name: ''
-        uses: im-open/thisrepo@v1.0.0 # TODO: fix the action name
+      - name: Setup Flyway
+        uses: actions/setup-flyway@v1
         with:
-          input-1: ''
+          version: 5.1.4
+
+      - name: Create the database
+        run: |
+          # ...
+      - name: Initialize the database
+        run: |
+          # Do any work needed to initialize the database
+          # ...
+
+      # Uses flyway to run migration scripts that will add tSqlt and tests to the database
+      - name: Add tSqlt to the database
+        uses: im-open/run-flyway-command@v1.3.0
+        with:
+          db-server-name: 'localhost'
+          db-server-port: '1433'
+          db-name: 'MyDatabase'
+          migration-files-path: 'path/to/tsqlt/files'
+          flyway-command: 'migrate'
+          migration-history-table: 'TestingHistory'
+          managed-schemas: 'dbo'
+          validate-migrations: 'false'
+          use-integrated-security: 'false'
+          username: 'sa'
+          password: '${{ secrets.MY_SA_PASSWORD }}'
+      
+      # Run the tests
+      - name: Run tSqlt tests
+        id: run-tests
+        uses: im-open/tsqlt-test-runner@v1.0.0
+        with:
+          db-server-name: 'localhost'
+          db-server-port: '1433'
+          db-name: 'MyDatabase'
+          query-timeout: '120' # 2 minutes
+          use-integrated-security: 'false'
+          db-username: 'sa'
+          db-password: '${{ secrets.MY_SA_PASSWORD }}'
+      
+      - name: Print outputs
+        shell: bash
+        run: |
+          echo "Path to test results: ${{ steps.run-tests.outputs.test-results-file-path }}"
+          echo "Total number of tests: ${{ steps.run-tests.outputs.total-number-of-tests }}"
+          echo "Number of failed tests: ${{ steps.run-tests.outputs.total-number-of-test-failures }}"
+          echo "Number of test errors: ${{ steps.run-tests.outputs.total-number-of-test-errors }}"
 ```
 
 ## Contributing
