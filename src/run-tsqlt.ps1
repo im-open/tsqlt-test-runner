@@ -34,37 +34,37 @@ $getTestResultsSql = "
     EXEC [tSQLt].[XmlResultFormatter];
     "
 
-# $queryTimeoutParam = if ($queryTimeout) { "-t $queryTimeout" } else { "" }
-# $authParams = ""
-
-# if ($useIntegratedSecurity) {
-#     $authParams = "-E"
-# }
-# else {
-#     $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $username, $password
-#     $plainPassword = $cred.GetNetworkCredential().Password
-
-#     $authParams = "-U `"$username`" -P `"$plainPassword`""
-# }
-
-$queryTimeoutParam = if ($queryTimeout) { "-QueryTimeout $queryTimeout" } else { "" }
+$queryTimeoutParam = if ($queryTimeout) { "-t $queryTimeout" } else { "" }
 $authParams = ""
 
-if (!$useIntegratedSecurity) {
+if ($useIntegratedSecurity) {
+    $authParams = "-E"
+}
+else {
     $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $username, $password
     $plainPassword = $cred.GetNetworkCredential().Password
 
-    $authParams = "-Username `"$username`" -Password `"$plainPassword`""
+    $authParams = "-U `"$username`" -P `"$plainPassword`""
 }
+
+# $queryTimeoutParam = if ($queryTimeout) { "-QueryTimeout $queryTimeout" } else { "" }
+# $authParams = ""
+
+# if (!$useIntegratedSecurity) {
+#     $cred = New-Object System.Management.Automation.PSCredential -ArgumentList $username, $password
+#     $plainPassword = $cred.GetNetworkCredential().Password
+
+#     $authParams = "-Username `"$username`" -Password `"$plainPassword`""
+# }
 
 try {
     Write-Output "Executing tSQLt tests"
-    # Invoke-Expression "& sqlcmd $authParams -S `"$dbServer,$dbServerPort`" -d `"$dbName`" -Q `"$runTestsSql`" $queryTimeoutParam"
-    # $results = Invoke-Expression "& sqlcmd $authParams -b -S `"$dbServer,$dbServerPort`" -d `"$dbName`" -h-1 -I -Q `"$getTestResultsSql`" $queryTimeoutParam"
+    Invoke-Expression "& sqlcmd $authParams -S `"$dbServer,$dbServerPort`" -d `"$dbName`" -Q `"$runTestsSql`" $queryTimeoutParam"
+    Write-Output "Getting results"
+    $results = Invoke-Expression "& sqlcmd $authParams -b -S `"$dbServer,$dbServerPort`" -d `"$dbName`" -h-1 -I -Q `"$getTestResultsSql`" $queryTimeoutParam"
 
-    Write-Output "Invoke-Sqlcmd -ServerInstance `"$dbServer,$dbServerPort`" -Database `"$dbName`" $authParams -Query `"$runTestsSql`" $queryTimeoutParam"
-    Invoke-Expression "Invoke-Sqlcmd -ServerInstance `"$dbServer,$dbServerPort`" -Database `"$dbName`" $authParams -Query `"$runTestsSql`" $queryTimeoutParam"
-    $results = Invoke-Expression "Invoke-Sqlcmd -ServerInstance `"$dbServer,$dbServerPort`" -Database `"$dbName`" $authParams -Query `"$getTestResultsSql`" $queryTimeoutParam"
+    # Invoke-Expression "Invoke-Sqlcmd -ServerInstance `"$dbServer,$dbServerPort`" -Database `"$dbName`" $authParams -Query `"$runTestsSql`" $queryTimeoutParam"
+    # $results = Invoke-Expression "Invoke-Sqlcmd -ServerInstance `"$dbServer,$dbServerPort`" -Database `"$dbName`" $authParams -Query `"$getTestResultsSql`" $queryTimeoutParam"
 
     # Catch when an error happens in the test run (e.g. query timeout)
     if ($results -notlike "*testsuites*") {
