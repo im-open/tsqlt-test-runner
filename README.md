@@ -6,7 +6,6 @@ An Action for running [tSqlt](https://tsqlt.org/) tests against a database. It w
 
 - [tsqlt-test-runner](#tsqlt-test-runner)
   - [Index](#index)
-  - [TODOs](#todos)
   - [Inputs](#inputs)
   - [Outputs](#outputs)
   - [Example](#example)
@@ -14,12 +13,6 @@ An Action for running [tSqlt](https://tsqlt.org/) tests against a database. It w
     - [Incrementing the Version](#incrementing-the-version)
   - [Code of Conduct](#code-of-conduct)
   - [License](#license)
-  
-## TODOs
-- Readme
-  - [ ] Update the Inputs section with the correct action inputs
-  - [ ] Update the Outputs section with the correct action outputs
-  - [ ] Update the Example section with the correct usage   
    
     
 
