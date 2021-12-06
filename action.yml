@@ -14,17 +14,17 @@ inputs:
     description: The name of the database to run tests against.
     required: true
   query-timeout:
-    description: An optional setting, in seconds, for when to timeout the query that runs the tests. If tests sometimes hang, or they shouldn't take longer than a certain amount of time, this parameter can be helpful.
+    description: An optional setting for the allowed wait time, in seconds, for a statement to execute. If tests sometimes hang, or shouldn't take longer than a certain amount of time, this parameter can be helpful.
     required: false
   use-integrated-security:
-    description: A switch defining whether or not to use integrated security. If not provided, a password should be.
+    description: Use domain integrated security. If false, a db-username and db-password should be specified. If true, those parameters will be ignored if specified.
     required: true
     default: 'false'
   db-username:
-    description: The username to use to login to the database.
+    description: The username to use to login to the database. This is required if use-integrated-security is false, otherwise it's optional and will be ignored.
     required: false
   db-password:
-    description: The password for the user logging in to the database.
+    description: The password for the user logging in to the database. This is required if use-integrated-security is false, otherwise it's optional and will be ignored.
     required: false
 
 outputs:

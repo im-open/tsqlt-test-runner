@@ -17,15 +17,15 @@ An Action for running [tSqlt](https://tsqlt.org/) tests against a database. It w
     
 
 ## Inputs
-| Parameter                 | Is Required | Default | Description                                                                                                                                                                                              |
-| ------------------------- | ----------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `db-server-name`          | true        | N/A     | The database server name.                                                                                                                                                                                |
-| `db-server-port`          | false       | 1433    | The port the database server listens on.                                                                                                                                                                 |
-| `db-name`                 | true        | N/A     | The name of the database to run tests against.                                                                                                                                                           |
+| Parameter                 | Is Required | Default | Description                                                                                                                                                                                            |
+| ------------------------- | ----------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `db-server-name`          | true        | N/A     | The database server name.                                                                                                                                                                              |
+| `db-server-port`          | false       | 1433    | The port the database server listens on.                                                                                                                                                               |
+| `db-name`                 | true        | N/A     | The name of the database to run tests against.                                                                                                                                                         |
 | `query-timeout`           | false       | N/A     | An optional setting for the allowed wait time, in seconds, for a statement to execute. If tests sometimes hang, or shouldn't take longer than a certain amount of time, this parameter can be helpful. |
-| `use-integrated-security` | true        | false   | Use domain integrated security. If false, a db-username and db-password should be specified.                                                                                                      |
-| `db-username`             | false       | N/A     | The username to use to login to the database.                                                                                                                                                            |
-| `db-password`                   | false       | N/A     | The password for the user logging in to the database.                                                                                                                                                    |
+| `use-integrated-security` | true        | false   | Use domain integrated security. If false, a db-username and db-password should be specified. If true, those parameters will be ignored if specified.                                                   |
+| `db-username`             | false       | N/A     | The username to use to login to the database. This is required if use-integrated-security is false, otherwise it's optional and will be ignored.                                                       |
+| `db-password`             | false       | N/A     | The password for the user logging in to the database. This is required if use-integrated-security is false, otherwise it's optional and will be ignored.                                               |
 
 ## Outputs
 | Output                          | Description                            |
