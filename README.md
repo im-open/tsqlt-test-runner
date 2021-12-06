@@ -22,10 +22,10 @@ An Action for running [tSqlt](https://tsqlt.org/) tests against a database. It w
 | `db-server-name`          | true        | N/A     | The database server name.                                                                                                                                                                                |
 | `db-server-port`          | false       | 1433    | The port the database server listens on.                                                                                                                                                                 |
 | `db-name`                 | true        | N/A     | The name of the database to run tests against.                                                                                                                                                           |
-| `query-timeout`           | false       | N/A     | An optional setting, in seconds, for when to timeout the query that runs the tests. If tests sometimes hang, or they shouldn't take longer than a certain amount of time, this parameter can be helpful. |
-| `use-integrated-security` | true        | false   | A switch defining whether or not to use integrated security. If not provided, a password should be.                                                                                                      |
+| `query-timeout`           | false       | N/A     | An optional setting for the allowed wait time, in seconds, for a statement to execute. If tests sometimes hang, or shouldn't take longer than a certain amount of time, this parameter can be helpful. |
+| `use-integrated-security` | true        | false   | Use domain integrated security. If false, a db-username and db-password should be specified.                                                                                                      |
 | `db-username`             | false       | N/A     | The username to use to login to the database.                                                                                                                                                            |
-| `input`                   | false       | N/A     | The password for the user logging in to the database.                                                                                                                                                    |
+| `db-password`                   | false       | N/A     | The password for the user logging in to the database.                                                                                                                                                    |
 
 ## Outputs
 | Output                          | Description                            |
