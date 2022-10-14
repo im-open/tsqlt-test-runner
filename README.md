@@ -13,10 +13,9 @@ An Action for running [tSqlt](https://tsqlt.org/) tests against a database. It w
     - [Incrementing the Version](#incrementing-the-version)
   - [Code of Conduct](#code-of-conduct)
   - [License](#license)
-   
-    
 
 ## Inputs
+
 | Parameter                 | Is Required | Default | Description                                                                                                                                                                                            |
 | ------------------------- | ----------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `db-server-name`          | true        | N/A     | The database server name.                                                                                                                                                                              |
@@ -28,6 +27,7 @@ An Action for running [tSqlt](https://tsqlt.org/) tests against a database. It w
 | `db-password`             | false       | N/A     | The password for the user logging in to the database. This is required if use-integrated-security is false, otherwise it's optional and will be ignored.                                               |
 
 ## Outputs
+
 | Output                          | Description                            |
 | ------------------------------- | -------------------------------------- |
 | `test-results-file-path`        | The path to the test results xml file. |
@@ -42,10 +42,10 @@ jobs:
   build-and-test-database:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup Flyway
-        uses: actions/setup-flyway@v1
+        uses: im-open/setup-flyway@v1.1.0
         with:
           version: 5.1.4
 
@@ -59,7 +59,7 @@ jobs:
 
       # Uses flyway to run migration scripts that will add tSqlt and tests to the database
       - name: Add tSqlt to the database
-        uses: im-open/run-flyway-command@v1.3.0
+        uses: im-open/run-flyway-command@v1.5.0
         with:
           db-server-name: 'localhost'
           db-server-port: '1433'
@@ -72,11 +72,11 @@ jobs:
           use-integrated-security: 'false'
           username: 'sa'
           password: '${{ secrets.MY_SA_PASSWORD }}'
-      
+
       # Run the tests
       - name: Run tSqlt tests
         id: run-tests
-        uses: im-open/tsqlt-test-runner@v1.0.0
+        uses: im-open/tsqlt-test-runner@v1.0.1
         with:
           db-server-name: 'localhost'
           db-server-port: '1433'
@@ -85,7 +85,7 @@ jobs:
           use-integrated-security: 'false'
           db-username: 'sa'
           db-password: '${{ secrets.MY_SA_PASSWORD }}'
-      
+
       - name: Print outputs
         shell: bash
         run: |
@@ -98,20 +98,21 @@ jobs:
 ## Contributing
 
 When creating new PRs please ensure:
+
 1. For major or minor changes, at least one of the commit messages contains the appropriate `+semver:` keywords listed under [Incrementing the Version](#incrementing-the-version).
-2. The `README.md` example has been updated with the new version.  See [Incrementing the Version](#incrementing-the-version).
+2. The `README.md` example has been updated with the new version. See [Incrementing the Version](#incrementing-the-version).
 3. The action code does not contain sensitive information.
 
 ### Incrementing the Version
 
-This action uses [git-version-lite] to examine commit messages to determine whether to perform a major, minor or patch increment on merge.  The following table provides the fragment that should be included in a commit message to active different increment strategies.
-| Increment Type | Commit Message Fragment                     |
+This action uses [git-version-lite] to examine commit messages to determine whether to perform a major, minor or patch increment on merge. The following table provides the fragment that should be included in a commit message to active different increment strategies.
+| Increment Type | Commit Message Fragment |
 | -------------- | ------------------------------------------- |
-| major          | +semver:breaking                            |
-| major          | +semver:major                               |
-| minor          | +semver:feature                             |
-| minor          | +semver:minor                               |
-| patch          | *default increment type, no comment needed* |
+| major | +semver:breaking |
+| major | +semver:major |
+| minor | +semver:feature |
+| minor | +semver:minor |
+| patch | *default increment type, no comment needed* |
 
 ## Code of Conduct
 
