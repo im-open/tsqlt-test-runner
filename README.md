@@ -76,7 +76,7 @@ jobs:
       # Run the tests
       - name: Run tSqlt tests
         id: run-tests
-        uses: im-open/tsqlt-test-runner@v1.0.1
+        uses: im-open/tsqlt-test-runner@v1.1.0
         with:
           db-server-name: 'localhost'
           db-server-port: '1433'

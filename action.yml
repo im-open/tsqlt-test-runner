@@ -66,4 +66,4 @@ runs:
     - name: Output test results file path
       id: results-file
       shell: bash
-      run: echo "::set-output name=file_path::${{ github.action_path }}/test-results/test-results.xml"
+      run: echo "file_path=${{ github.action_path }}/test-results/test-results.xml" >> $GITHUB_OUTPUT
