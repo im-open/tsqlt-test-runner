@@ -25,6 +25,6 @@ Write-Output "Number of tests: $totalTests"
 Write-Output "Number of failures: $numFailed"
 Write-Output "Number of errors: $numErrored"
 
-echo "number_of_tests=$totalTests" >> $GITHUB_OUTPUT
-echo "number_of_failures=$numFailed" >> $GITHUB_OUTPUT
-echo "number_of_errors=$numErrored" >> $GITHUB_OUTPUT
+"number_of_tests=$totalTests" >> $env:GITHUB_OUTPUT
+"number_of_failures=$numFailed" >> $env:GITHUB_OUTPUT
+"number_of_errors=$numErrored" >> $env:GITHUB_OUTPUT
