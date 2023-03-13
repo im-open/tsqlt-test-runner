@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Setup Flyway
-        uses: im-open/setup-flyway@v1.1.0
+        uses: im-open/setup-flyway@v1
         with:
           version: 5.1.4
 
@@ -59,7 +59,7 @@ jobs:
 
       # Uses flyway to run migration scripts that will add tSqlt and tests to the database
       - name: Add tSqlt to the database
-        uses: im-open/run-flyway-command@v1.5.0
+        uses: im-open/run-flyway-command@v1
         with:
           db-server-name: 'localhost'
           db-server-port: '1433'
@@ -76,7 +76,8 @@ jobs:
       # Run the tests
       - name: Run tSqlt tests
         id: run-tests
-        uses: im-open/tsqlt-test-runner@v1.1.0
+        # You may also reference the major or major.minor version
+        uses: im-open/tsqlt-test-runner@v1.1.1
         with:
           db-server-name: 'localhost'
           db-server-port: '1433'
