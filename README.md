@@ -1,3 +1,7 @@
+# DEPRECATED
+
+This action was deprecated on 2023-09-08 and will no longer receive support or updates.
+
 # tsqlt-test-runner
 
 An Action for running [tSqlt](https://tsqlt.org/) tests against a database. It will generate an xml file with the results of the test run.
